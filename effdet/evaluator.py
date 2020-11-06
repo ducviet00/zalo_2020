@@ -17,7 +17,7 @@ import effdet.evaluation.detection_evaluator as tfm_eval
 _logger = logging.getLogger(__name__)
 
 
-__all__ = ['CocoEvaluator', 'PascalEvaluator', 'OpenImagesEvaluator', 'create_evaluator']
+__all__ = ['CocoEvaluator', 'PascalEvaluator', 'OpenImagesEvaluator', 'create_evaluator', 'TrafficSignEvaluator']
 
 
 class Evaluator:
@@ -117,6 +117,37 @@ class CocoEvaluator(Evaluator):
         self.reset()
         return metric
 
+class TrafficSignEvaluator(Evaluator):
+
+    def __init__(self, dataset, distributed=False, pred_yxyx=False):
+        super().__init__(distributed=distributed, pred_yxyx=pred_yxyx)
+        self._dataset = dataset.parser
+        self.coco_api = dataset.parser.coco
+
+    def reset(self):
+        self.img_indices = []
+        self.predictions = []
+
+    def evaluate(self):
+        if not self.distributed or dist.get_rank() == 0:
+            assert len(self.predictions)
+            coco_predictions, coco_ids = self._coco_predictions()
+            json.dump(coco_predictions, open('./temp.json', 'w'), indent=4)
+            results = self.coco_api.loadRes('./temp.json')
+            coco_eval = COCOeval(self.coco_api, results, 'bbox')
+            coco_eval.params.imgIds = coco_ids  # score only ids we've used
+            coco_eval.evaluate()
+            coco_eval.accumulate()
+            coco_eval.summarize()
+            metric = coco_eval.stats[0]  # mAP 0.5-0.95
+            if self.distributed:
+                dist.broadcast(torch.tensor(metric, device=self.distributed_device), 0)
+        else:
+            metric = torch.tensor(0, device=self.distributed_device)
+            dist.broadcast(metric, 0)
+            metric = metric.item()
+        self.reset()
+        return metric
 
 class TfmEvaluator(Evaluator):
     """ Tensorflow Models Evaluator Wrapper """
@@ -180,5 +211,7 @@ def create_evaluator(name, dataset, distributed=False, pred_yxyx=False):
         return CocoEvaluator(dataset, distributed=distributed, pred_yxyx=pred_yxyx)
     elif 'openimages' in name:
         return OpenImagesEvaluator(dataset, distributed=distributed, pred_yxyx=pred_yxyx)
+    elif 'traffic_sign' in name:
+        return TrafficSignEvaluator(dataset, distributed=distributed, pred_yxyx=pred_yxyx)
     else:
         return PascalEvaluator(dataset, distributed=distributed, pred_yxyx=pred_yxyx)

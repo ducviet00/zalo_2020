@@ -48,7 +48,7 @@ class traffic_sign_detection(traffic_sign_cfg):
     variant: str = '2020'
     splits: Dict[str, dict] = field(default_factory=lambda: dict(
         train=dict(ann_filename='traffic_train/train_traffic_sign_dataset.json', img_dir='traffic_train/images', has_labels=True),
-        val=dict(ann_filename='traffic_train/train_traffic_sign_dataset.json', img_dir='traffic_train/images', has_labels=True),
+        val=dict(ann_filename='traffic_val/val.json', img_dir='traffic_val/images', has_labels=True),
         test=dict(ann_filename='', img_dir='traffic_public_test', has_labels=False),
     ))
 
