@@ -16,6 +16,7 @@ def create_dataset(name, root, splits=('train', 'val')):
     if isinstance(splits, str):
         splits = (splits,)
     name = name.lower()
+    print("name: ", name)
     root = Path(root)
     dataset_cls = DetectionDatset
     datasets = OrderedDict()
@@ -37,6 +38,20 @@ def create_dataset(name, root, splits=('train', 'val')):
                 data_dir=root / Path(split_cfg['img_dir']),
                 parser=create_parser(dataset_cfg.parser, cfg=parser_cfg),
             )
+    elif name.startswith('traffic_sign'):
+        for s in splits:
+            dataset_cfg = traffic_sign_detection()
+            if s not in dataset_cfg.splits:
+                raise RuntimeError(f'{s} split not found in config')
+            split_cfg = dataset_cfg.splits[s]
+            ann_file = root / split_cfg['ann_filename']
+            parser_cfg = TrafficSignParserCfg(
+                ann_filename=ann_file,
+                has_labels=split_cfg['has_labels'])
+            datasets[s] = dataset_cls(
+                data_dir=root / Path(split_cfg['img_dir']),
+                parser=create_parser(dataset_cfg.parser, cfg=parser_cfg),)
+
     elif name.startswith('voc'):
         if 'voc0712' in name:
             dataset_cfg = Voc0712Cfg()

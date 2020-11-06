@@ -431,7 +431,7 @@ def main():
 
 def create_datasets_and_loaders(args, model_config):
     input_config = resolve_input_config(args, model_config=model_config)
-
+    print('args.dataset: ', args.dataset)
     dataset_train, dataset_eval = create_dataset(args.dataset, args.root)
 
     # setup labeler in loader/collate_fn if not enabled in the model bench

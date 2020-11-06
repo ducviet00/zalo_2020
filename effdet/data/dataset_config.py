@@ -14,6 +14,13 @@ class CocoCfg:
     num_classes: int = 80
     splits: Dict[str, dict] = None
 
+@dataclass 
+class traffic_sign_cfg:
+    variant: str = None
+    parser: str = 'za_traffic_2020'
+    num_classes: int = 7
+    splits: Dict[str, dict] = None
+
 
 @dataclass
 class Coco2017Cfg(CocoCfg):
@@ -35,6 +42,15 @@ class Coco2014Cfg(CocoCfg):
         test=dict(ann_filename='', img_dir='test2014', has_labels=False),
     ))
 
+
+@dataclass
+class traffic_sign_detection(traffic_sign_cfg):
+    variant: str = '2020'
+    splits: Dict[str, dict] = field(default_factory=lambda: dict(
+        train=dict(ann_filename='traffic_train/train_traffic_sign_dataset.json', img_dir='traffic_train/images', has_labels=True),
+        val=dict(ann_filename='traffic_train/train_traffic_sign_dataset.json', img_dir='traffic_train/images', has_labels=True),
+        test=dict(ann_filename='', img_dir='traffic_public_test', has_labels=False),
+    ))
 
 @dataclass
 class VocCfg:
