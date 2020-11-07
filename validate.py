@@ -135,7 +135,10 @@ def validate(args):
     if args.num_gpu > 1:
         bench = torch.nn.DataParallel(bench, device_ids=list(range(args.num_gpu)))
 
+    
+    
     dataset = create_dataset(args.dataset, args.root, args.split)
+    
     input_config = resolve_input_config(args, model_config)
     loader = create_loader(
         dataset,
@@ -154,6 +157,7 @@ def validate(args):
     batch_time = AverageMeter()
     end = time.time()
     last_idx = len(loader) - 1
+    print(len(loader))
     with torch.no_grad():
         for i, (input, target) in enumerate(loader):
             with amp_autocast():
