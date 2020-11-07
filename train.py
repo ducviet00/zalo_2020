@@ -70,7 +70,7 @@ parser.add_argument('--num-classes', type=int, default=None, metavar='N',
                     help='Override num_classes in model config if set. For fine-tuning from pretrained.')
 parser.add_argument('--pretrained', action='store_true', default=False,
                     help='Start with pretrained version of specified network (if avail)')
-parser.add_argument('--no-pretrained-backbone', action='store_true', default=False,
+parser.add_argument('--no-pretrained-backbone', action='store_true', default=True,
                     help='Do not start with pretrained backbone weights, fully random.')
 parser.add_argument('--initial-checkpoint', default='', type=str, metavar='PATH',
                     help='Initialize model from this checkpoint (default: none)')
