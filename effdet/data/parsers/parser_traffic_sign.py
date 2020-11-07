@@ -31,6 +31,8 @@ class TrafficSignParser(Parser):
         self.coco = COCO(ann_file)
         self.cat_ids = self.coco.getCatIds()
         self.cat_names = [c['name'] for c in self.coco.loadCats(ids=self.cat_ids)]
+        # print("cat_ids: ", self.coco.getCatIds())
+        # print("cat_names: ", self.cat_names)
         if not self.cat_ids_as_labels:
             self.cat_id_to_label = {cat_id: i + self.label_offset for i, cat_id in enumerate(self.cat_ids)}
         img_ids_with_ann = set(_['image_id'] for _ in self.coco.anns.values())

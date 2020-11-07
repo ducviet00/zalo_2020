@@ -16,7 +16,7 @@ def create_dataset(name, root, splits=('train', 'val')):
     if isinstance(splits, str):
         splits = (splits,)
     name = name.lower()
-    print("name: ", name)
+    # print("name: ", name)
     root = Path(root)
     dataset_cls = DetectionDatset
     datasets = OrderedDict()
