@@ -49,7 +49,7 @@ class traffic_sign_detection(traffic_sign_cfg):
     splits: Dict[str, dict] = field(default_factory=lambda: dict(
         train=dict(ann_filename='/kaggle/input/trafficlights/za_traffic_2020/za_traffic_2020/traffic_train/train_traffic_sign_dataset.json', 
                    img_dir='/kaggle/input/trafficlights/za_traffic_2020/za_traffic_2020/traffic_train/images', has_labels=True),
-        val=dict(ann_filename=/kaggle/input/trafficlights/za_traffic_2020/za_traffic_2020/traffic_train/train_traffic_sign_dataset.json',
+        val=dict(ann_filename='/kaggle/input/trafficlights/za_traffic_2020/za_traffic_2020/traffic_train/train_traffic_sign_dataset.json',
                  img_dir='/kaggle/input/trafficlights/za_traffic_2020/za_traffic_2020/traffic_train/images', has_labels=True),
         test=dict(ann_filename='', img_dir='/kaggle/input/trafficlights/za_traffic_2020/za_traffic_2020/traffic_public_test/images', has_labels=False),
     ))
