@@ -174,6 +174,7 @@ def validate(args):
                 )
 
     mean_ap = 0.
+    print(dataset.parser)
     if dataset.parser.has_labels:
         mean_ap = evaluator.evaluate()
     else:
