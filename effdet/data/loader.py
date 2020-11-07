@@ -9,7 +9,7 @@ from effdet.anchors import AnchorLabeler
 from timm.data.distributed_sampler import OrderedDistributedSampler
 import os
 
-MAX_NUM_INSTANCES = 100
+MAX_NUM_INSTANCES = 1
 
 
 class DetectionFastCollate:
